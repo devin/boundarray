@@ -4,30 +4,31 @@
 var BoundArray = function(data, id, cl) {
 	var list = document.getElementById(id);
 	var i, child;
+	var that = this;
 
-	// Set settor interceptor for all existing entries in the data array.
-	// Intercept settor and update both the array and the HTML list element.
+	var defineSetter = function(index) {
+		that.__defineSetter__(index, function(val) {
+			child = document.getElementById(id).childNodes[index];
+
+			data[index] = val;
+			child.innerHTML = val;
+
+			return val;
+		});
+	};
+
+	var defineGetter = function(index) {
+		that.__defineGetter__(index, function() {
+			return data[index];
+		});
+	};
+
+	// Set interceptors for all existing entries in the data array.
+	// - intercept setter and update both the array and the HTML list element.
+	// - intercept getter to get data from the array.
 	for (i=0; i<data.length; i++) {
-		this.__defineSetter__(i, function(j) {
-			return function(val) {
-				var second = document.getElementById(id).childNodes[1];
-
-				data[j] = val;
-				second.innerHTML = val;
-
-				return val;
-			};
-		}(i));
-	}
-
-	// Set gettor interceptor for all existing entries in the data array.
-	// Intercept gettor to get data from the array.
-	for (i=0; i<data.length; i++) {
-		this.__defineGetter__(i, function(j) {
-			return function () {
-				return data[j];
-			};
-		}(i));
+		defineSetter(i);
+		defineGetter(i);
 	}
 
 	// Clear and build initial list.
