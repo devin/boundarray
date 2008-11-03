@@ -21,23 +21,22 @@
     </p>
   </div>
 
-  <!-- Log output (one per Runner, via {testLog: "testlog"} option)-->
-  <div id="testlog"></div>
+  <div id="array"></div>
+
+	<div id="list"></div>
   
-  <!-- Put sample/test html here -->
-  <div id="testSandBox">
+  <div id="testSandBox" style="display: none;">
   	<ul id="boundlist"></ul>
   </div>
 </div>
 
 <script type="text/javascript">
-// <![CDATA[
-	var ba;
+	var ba, element;
 
+	// Array specific tests.
   new Test.Unit.Runner({
-    // replace this with your real tests
     setup: function() {
-      ba = new BoundArray(['one', 'two', 'three'], 'boundlist', null);
+      ba = new BoundArray(['one', 'two', 'three'], null, null);
     },
     
     teardown: function() {
@@ -62,23 +61,6 @@
 			this.assertEqual('3', ba[2]);
 		},
 
-		testSettersList: function() {
-			var second = document.getElementById('boundlist').childNodes[1];
-			
-			this.assertEqual('two', second.innerHTML);
-			ba[1] = '2';
-			this.assertEqual('2', second.innerHTML);
-		},
-
-		testListClass: function() {
-			var second = document.getElementById('boundlist').childNodes[1];
-			
-			this.assertEqual(null, second.getAttribute('class'));
-			var bc = new BoundArray(['one', 'two', 'three'], 'boundlist', 'c');
-			second = document.getElementById('boundlist').childNodes[1];
-			this.assertEqual('c', second.getAttribute('class'));
-		},
-
 		testLength: function() {
 			this.assertEqual(3, ba.length);
 			ba[4] = 'three'; // Shouldn't work.
@@ -89,12 +71,73 @@
 			this.assertEqual(null, ba[3]);
 			this.assertEqual(null, ba[4]);
 		},
-
+		
 		testGrowth: function() {
 			ba.length = 5;
 			this.assertEqual(null, ba[4]);
 			ba[4] = 'five';
 			this.assertEqual('five', ba[4]);
+		},
+
+		testRegExp: function() {
+			var re = /^(\d).*(\d)$/;
+			var sult = re.exec('1 a b c 3');
+			this.assertEqual(0, sult.index);
+			this.assertEqual('1 a b c 3', sult.input)
+
+			ba = new BoundArray(sult, null, null);
+			this.assertEqual(0, ba.index);
+			this.assertEqual('1 a b c 3', ba.input);
+		},
+
+		testMimicArray: function() {
+			this.assert(ba);
+			this.assertEqual('object', typeof ba);
+			this.assertEqual('number', typeof ba.length);
+			this.assertEqual('function', typeof ba.splice);
+			this.assert(!ba.propertyIsEnumerable('length'));
+
+			var is_array = function(value) {
+				return value &&
+					typeof value === 'object' &&
+					typeof value.length === 'number' &&
+					typeof value.splice === 'function' &&
+					!(value.propertyIsEnumerable('length'));
+			}
+
+			this.assert(is_array(ba));
+		}
+      
+  }, {testLog: "array"});
+
+	// HTML list specific tests.
+  new Test.Unit.Runner({
+    setup: function() {
+      ba = new BoundArray(['one', 'two', 'three'], 'boundlist', 'c');
+			element = document.getElementById('boundlist');
+    },
+    
+    teardown: function() {
+      
+    },
+
+		testList: function() {			
+			this.assertEqual('one', element.childNodes[0].innerHTML);
+			this.assertEqual('two', element.childNodes[1].innerHTML);
+			this.assertEqual('three', element.childNodes[2].innerHTML);
+		},
+
+		testSetters: function() {
+			var second = element.childNodes[1];
+			
+			this.assertEqual('two', second.innerHTML);
+			ba[1] = '2';
+			this.assertEqual('2', second.innerHTML);
+		},
+
+		testClass: function() {
+			var second = element.childNodes[1];
+			this.assertEqual('c', second.getAttribute('class'));
 		},
 
 		testUndefined: function() {
@@ -105,13 +148,8 @@
 			this.assertEqual('', last.innerHTML);
 		}
       
-  }, {testLog: "testlog"}); 
-  // For each Test.UnitRunner instance, specify the element id where results will be
-  // published; e.g. <div id="testlog"/> above.
-  // That is, you can have multiple "new Test.Unit.Runner() { ... }" on this page, just
-  // create more <div id="testlog2"></div> etc, and pass the element id to the hash above:
-  // e.g. {testLog: "testlog2"}
-// ]]>
+  }, {testLog: "list"});
+
 </script>
 </body>
 </html>

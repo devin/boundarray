@@ -8,10 +8,12 @@ var BoundArray = function(data, id, cl) {
 
 	var defineSetter = function(index) {
 		that.__defineSetter__(index, function(val) {
-			child = document.getElementById(id).childNodes[index];
+			if (list) {
+				child = document.getElementById(id).childNodes[index];
+				child.innerHTML = val ? val : '';
+			}
 
 			data[index] = val;
-			child.innerHTML = val ? val : '';
 
 			return val;
 		});
@@ -24,12 +26,14 @@ var BoundArray = function(data, id, cl) {
 	};
 
 	var appendElement = function(index) {
-		child = document.createElement('li');
-		if (cl) {
-			child.setAttribute('class', cl);
+		if (list) {
+			child = document.createElement('li');
+			if (cl) {
+				child.setAttribute('class', cl);
+			}
+			child.innerHTML = data[i] ? data[i] : '';
+			list.appendChild(child);
 		}
-		child.innerHTML = data[i] ? data[i] : '';
-		list.appendChild(child);
 	};
 
 	// Set interceptors for all existing entries in the data array.
@@ -41,17 +45,21 @@ var BoundArray = function(data, id, cl) {
 	}
 
 	// Clear and build initial list.
-	while (list.childNodes[0]) {
-		list.removeChild(list.childNodes[0]);
-	}
-	for (i=0; i<data.length; i++) {
-		appendElement(i);
+	if (list) {
+		while (list.childNodes[0]) {
+			list.removeChild(list.childNodes[0]);
+		}
+		for (i=0; i<data.length; i++) {
+			appendElement(i);
+		}
 	}
 
-	// Set up special properties to mimic array.prototype.
-	// TODO constructor
-	// TODO index
-	// TODO input
+	// Special properties to mimic array.prototype.
+	// array.prototype.index and input
+	if (data.input) {
+		this.index = data.index;
+		this.input = data.input;
+	}
 	// array.prototype.length
 	this.__defineGetter__('length', function() {
 		return data.length;
