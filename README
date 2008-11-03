@@ -1,10 +1,11 @@
 boundarray
 
 Description:
-    This JavaScript project ...
+    Wrapping of the JavaScript Array object that allows for binding it's contents to an HTML list element.
+TODO extend.
 
 Example:
-    ...
+    TODO
 
 More information:
     http://github.com/devin/boundarray
