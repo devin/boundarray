@@ -77,6 +77,17 @@
 			var bc = new BoundArray(['one', 'two', 'three'], 'boundlist', 'c');
 			second = document.getElementById('boundlist').childNodes[1];
 			this.assertEqual('c', second.getAttribute('class'));
+		},
+
+		testLength: function() {
+			this.assertEqual(3, ba.length);
+			ba[4] = 'three'; // Shouldn't work.
+			this.assertEqual(3, ba.length);
+
+			ba.length = 5;
+			this.assertEqual(5, ba.length);
+			this.assertEqual(null, ba[3]);
+			this.assertEqual(null, ba[4]);
 		}
       
   }, {testLog: "testlog"}); 

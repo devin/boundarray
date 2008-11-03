@@ -43,4 +43,14 @@ var BoundArray = function(data, id, cl) {
 		list.appendChild(child);
 	}
 
+	// Set up special properties to mimic array.prototype.
+	// TODO constructor
+	// TODO index
+	// TODO input
+	// array.prototype.length
+	this.__defineGetter__('length', function() {
+		return data.length;
+	});
+	// TODO length setter
+
 };
