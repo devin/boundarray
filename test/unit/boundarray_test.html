@@ -88,6 +88,21 @@
 			this.assertEqual(5, ba.length);
 			this.assertEqual(null, ba[3]);
 			this.assertEqual(null, ba[4]);
+		},
+
+		testGrowth: function() {
+			ba.length = 5;
+			this.assertEqual(null, ba[4]);
+			ba[4] = 'five';
+			this.assertEqual('five', ba[4]);
+		},
+
+		testUndefined: function() {
+			var last;
+
+			ba.length = 5;
+			last = document.getElementById('boundlist').childNodes[4];
+			this.assertEqual('', last.innerHTML);
 		}
       
   }, {testLog: "testlog"}); 

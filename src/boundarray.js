@@ -11,7 +11,7 @@ var BoundArray = function(data, id, cl) {
 			child = document.getElementById(id).childNodes[index];
 
 			data[index] = val;
-			child.innerHTML = val;
+			child.innerHTML = val ? val : '';
 
 			return val;
 		});
@@ -21,6 +21,15 @@ var BoundArray = function(data, id, cl) {
 		that.__defineGetter__(index, function() {
 			return data[index];
 		});
+	};
+
+	var appendElement = function(index) {
+		child = document.createElement('li');
+		if (cl) {
+			child.setAttribute('class', cl);
+		}
+		child.innerHTML = data[i] ? data[i] : '';
+		list.appendChild(child);
 	};
 
 	// Set interceptors for all existing entries in the data array.
@@ -36,12 +45,7 @@ var BoundArray = function(data, id, cl) {
 		list.removeChild(list.childNodes[0]);
 	}
 	for (i=0; i<data.length; i++) {
-		child = document.createElement('li');
-		if (cl) {
-			child.setAttribute('class', cl);
-		}
-		child.innerHTML = data[i];
-		list.appendChild(child);
+		appendElement(i);
 	}
 
 	// Set up special properties to mimic array.prototype.
@@ -52,6 +56,17 @@ var BoundArray = function(data, id, cl) {
 	this.__defineGetter__('length', function() {
 		return data.length;
 	});
-	// TODO length setter
+	this.__defineSetter__('length', function(val) {
+		// Set interceptors and grow list.
+		for (i=data.length; i<val; i++) {
+			defineSetter(i);
+			defineGetter(i);
+			
+			appendElement(i);
+		}
+
+		data.length = val;
+		return val;
+	});
 
 };
