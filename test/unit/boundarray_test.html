@@ -25,7 +25,9 @@
   <div id="testlog"></div>
   
   <!-- Put sample/test html here -->
-  <div id="sample"></div>
+  <div id="testSandBox">
+  	<ul id="boundlist"></ul>
+  </div>
 </div>
 
 <script type="text/javascript">
@@ -35,30 +37,47 @@
   new Test.Unit.Runner({
     // replace this with your real tests
     setup: function() {
-      ba = new BoundArray(['one', 'two', 'three'], null, null);
+      ba = new BoundArray(['one', 'two', 'three'], 'boundlist', null);
     },
     
     teardown: function() {
       
     },
     
-    testGetters: function() { with(this) {
-      assertEqual('one', ba[0]);
-			assertEqual('two', ba[1]);
-			assertEqual('three', ba[2]);
-    }},
+    testGetters: function() {
+      this.assertEqual('one', ba[0]);
+			this.assertEqual('two', ba[1]);
+			this.assertEqual('three', ba[2]);
+    },
 
-		testSetters: function() { with(this) {
-			assertEqual('one', ba[0]);
-			assertEqual('two', ba[1]);
-			assertEqual('three', ba[2]);
+		testSetters: function() {
+			this.assertEqual('one', ba[0]);
+			this.assertEqual('two', ba[1]);
+			this.assertEqual('three', ba[2]);
 			ba[0] = '1';
 			ba[1] = '2';
 			ba[2] = '3';
-			assertEqual('1', ba[0]);
-			assertEqual('2', ba[1]);
-			assertEqual('3', ba[2]);
-		}},
+			this.assertEqual('1', ba[0]);
+			this.assertEqual('2', ba[1]);
+			this.assertEqual('3', ba[2]);
+		},
+
+		testSettersList: function() {
+			var second = document.getElementById('boundlist').childNodes[1];
+			
+			this.assertEqual('two', second.innerHTML);
+			ba[1] = '2';
+			this.assertEqual('2', second.innerHTML);
+		},
+
+		testListClass: function() {
+			var second = document.getElementById('boundlist').childNodes[1];
+			
+			this.assertEqual(null, second.getAttribute('class'));
+			var bc = new BoundArray(['one', 'two', 'three'], 'boundlist', 'c');
+			second = document.getElementById('boundlist').childNodes[1];
+			this.assertEqual('c', second.getAttribute('class'));
+		}
       
   }, {testLog: "testlog"}); 
   // For each Test.UnitRunner instance, specify the element id where results will be
