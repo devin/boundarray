@@ -1,13 +1,13 @@
 /*
  * TODO documentation
  */
-var BoundArray = function(data, id, cl) {
+var BoundArray = function (data, id, cl) {
 	var list = document.getElementById(id);
 	var i, child;
 	var that = this;
 
-	var defineSetter = function(index) {
-		that.__defineSetter__(index, function(val) {
+	var defineSetter = function (index) {
+		that.__defineSetter__(index, function (val) {
 			if (list) {
 				child = document.getElementById(id).childNodes[index];
 				child.innerHTML = val ? val : '';
@@ -19,13 +19,13 @@ var BoundArray = function(data, id, cl) {
 		});
 	};
 
-	var defineGetter = function(index) {
-		that.__defineGetter__(index, function() {
+	var defineGetter = function (index) {
+		that.__defineGetter__(index, function () {
 			return data[index];
 		});
 	};
 
-	var appendElement = function(index) {
+	var appendElement = function (index) {
 		if (list) {
 			child = document.createElement('li');
 			if (cl) {
@@ -61,10 +61,10 @@ var BoundArray = function(data, id, cl) {
 		this.input = data.input;
 	}
 	// array.prototype.length
-	this.__defineGetter__('length', function() {
+	this.__defineGetter__('length', function () {
 		return data.length;
 	});
-	this.__defineSetter__('length', function(val) {
+	this.__defineSetter__('length', function (val) {
 		// Set interceptors and grow list.
 		for (i=data.length; i<val; i++) {
 			defineSetter(i);
@@ -76,5 +76,29 @@ var BoundArray = function(data, id, cl) {
 		data.length = val;
 		return val;
 	});
+
+	// Add Array.prototype methods.
+	// TODO
+	// There doesn't seem to be a good way to loop over all built-in methods on
+	// Array.prototype, so for now this will have to be hardcoded.
+	var methods = [
+		// Javascript Core Reference
+		// Mutator methods
+		'pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift',
+		// Accessor methods
+		'concat', 'join', 'slice', 'toSource', 'toString', 'indexOf', 'lastIndexOf',
+		// Iteration methods
+		'filter', 'forEach', 'every', 'map', 'some', 'reduce', 'reduceRight'
+		];
+
+	// Intercept these calls and redirect to data array. Do nothing with the list.
+	// Overwrite these for methods we specifically want to handle on the HTML list.
+	for (i=0; i<methods.length; i++) {
+		(function (method) {
+			that[method] = function () {
+				return data[method].apply(data, arguments);
+			};
+		}(methods[i]));
+	}
 
 };
