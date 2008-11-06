@@ -147,6 +147,6 @@ var BoundArray = function (data, id, cl) {
 		}
 		
 		return data.reverse();
-	}
+	};
 
 };
