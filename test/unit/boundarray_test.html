@@ -24,6 +24,8 @@
   <div id="array"></div>
 
 	<div id="list"></div>
+
+	<div id="methods"></div>
   
   <div id="testSandBox" style="display: none;">
   	<ul id="boundlist"></ul>
@@ -158,6 +160,43 @@
 		}
       
   }, {testLog: "list"});
+
+	// Method specific tests.
+  new Test.Unit.Runner({
+    setup: function () {
+      ba = new BoundArray(['one', 'two', 'three'], 'boundlist', 'c');
+			element = document.getElementById('boundlist');
+    },
+    
+    teardown: function () {
+      
+    },
+
+		testPop: function () {
+			var result;
+
+			this.assertEqual(3, element.childNodes.length);
+			result = ba.pop();
+			this.assertEqual('three', result);
+			this.assertEqual(2, element.childNodes.length);
+			result = ba.pop()
+			this.assertEqual('two', result)
+			this.assertEqual(1, element.childNodes.length);
+		},
+
+		testPush: function () {
+			var result;
+
+			this.assertEqual(3, element.childNodes.length);
+			result = ba.push('four');
+			this.assertEqual(4, result);
+			this.assertEqual(4, element.childNodes.length);
+			result = ba.push('five', 'six', 'seven');
+			this.assertEqual(7, result);
+			this.assertEqual(7, element.childNodes.length);
+		}
+      
+  }, {testLog: "methods"});
 
 </script>
 </body>

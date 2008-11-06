@@ -111,4 +111,24 @@ var BoundArray = function (data, id, cl) {
 		}
 	};
 
+	// Overwite methods that we want to specifically handle on the HTML list.
+	this.pop = function () {
+		if (list) {
+			var last = list.childNodes[list.childNodes.length-1];
+			list.removeChild(last);
+		}
+		return data.pop();
+	};
+	this.push = function() {
+		var result = data.push.apply(data, arguments);
+
+		if (list) {
+			var i, child;
+			for (i=0; i<arguments.length; i++) {
+				appendElement(i);
+			}
+		}
+		return result;
+	};
+
 };
