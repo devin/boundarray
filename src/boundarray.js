@@ -136,10 +136,11 @@ var BoundArray = function (data, id, cl) {
 		return result;
 	};
 	this.reverse = function() {
-		var first = list.childNodes[0];
+		var first;
 		var i, child;
 
 		if (list) {
+			first =  list.childNodes[0];
 			for (i=1; i<list.childNodes.length; i++) {
 				child = list.childNodes[i];
 				list.insertBefore(child, first);
@@ -148,5 +149,11 @@ var BoundArray = function (data, id, cl) {
 		
 		return data.reverse();
 	};
+	this.shift = function() {
+		if (list) {
+			list.removeChild(list.childNodes[0]);
+		}
+		return data.shift();
+	}
 
 };
