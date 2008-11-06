@@ -103,11 +103,12 @@ var BoundArray = function (data, id, cl) {
 
 	// Make all of these methods not enumerable.
 	this.propertyIsEnumerable = function (prop) {
-		if (prop==='index' || prop==='input' || prop==='length') {
+		if (prop==='index' || prop==='input' || prop==='length' ||
+				prop==='propertyIsEnumerable') {
 			return false;
 		} else {
-			return -1!==methods.indexOf(prop);
+			return -1===methods.indexOf(prop);
 		}
-	}
+	};
 
 };

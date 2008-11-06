@@ -35,21 +35,21 @@
 
 	// Array specific tests.
   new Test.Unit.Runner({
-    setup: function() {
+    setup: function () {
       ba = new BoundArray(['one', 'two', 'three'], null, null);
     },
     
-    teardown: function() {
+    teardown: function () {
       
     },
     
-    testGetters: function() {
+    testGetters: function () {
       this.assertEqual('one', ba[0]);
 			this.assertEqual('two', ba[1]);
 			this.assertEqual('three', ba[2]);
     },
 
-		testSetters: function() {
+		testSetters: function () {
 			this.assertEqual('one', ba[0]);
 			this.assertEqual('two', ba[1]);
 			this.assertEqual('three', ba[2]);
@@ -61,7 +61,7 @@
 			this.assertEqual('3', ba[2]);
 		},
 
-		testLength: function() {
+		testLength: function () {
 			this.assertEqual(3, ba.length);
 			ba[4] = 'three'; // Shouldn't work.
 			this.assertEqual(3, ba.length);
@@ -72,14 +72,14 @@
 			this.assertEqual(null, ba[4]);
 		},
 		
-		testGrowth: function() {
+		testGrowth: function () {
 			ba.length = 5;
 			this.assertEqual(null, ba[4]);
 			ba[4] = 'five';
 			this.assertEqual('five', ba[4]);
 		},
 
-		testRegExp: function() {
+		testRegExp: function () {
 			var re = /^(\d).*(\d)$/;
 			var sult = re.exec('1 a b c 3');
 			this.assertEqual(0, sult.index);
@@ -90,14 +90,14 @@
 			this.assertEqual('1 a b c 3', ba.input);
 		},
 
-		testMimicArray: function() {
+		testMimicArray: function () {
 			this.assert(ba);
 			this.assertEqual('object', typeof ba);
 			this.assertEqual('number', typeof ba.length);
 			this.assertEqual('function', typeof ba.splice);
 			this.assert(!ba.propertyIsEnumerable('length'));
 
-			var is_array = function(value) {
+			var is_array = function (value) {
 				return value &&
 					typeof value === 'object' &&
 					typeof value.length === 'number' &&
@@ -106,28 +106,37 @@
 			}
 
 			this.assert(is_array(ba));
+		},
+
+		testInterceptors: function () {
+			var result = ba.pop();
+			this.assertEqual('three', result);
+			ba.push('four');
+			this.assertEqual('four', ba[2]);
+
+			// TODO extend interception tests?
 		}
       
   }, {testLog: "array"});
 
 	// HTML list specific tests.
   new Test.Unit.Runner({
-    setup: function() {
+    setup: function () {
       ba = new BoundArray(['one', 'two', 'three'], 'boundlist', 'c');
 			element = document.getElementById('boundlist');
     },
     
-    teardown: function() {
+    teardown: function () {
       
     },
 
-		testList: function() {			
+		testList: function () {			
 			this.assertEqual('one', element.childNodes[0].innerHTML);
 			this.assertEqual('two', element.childNodes[1].innerHTML);
 			this.assertEqual('three', element.childNodes[2].innerHTML);
 		},
 
-		testSetters: function() {
+		testSetters: function () {
 			var second = element.childNodes[1];
 			
 			this.assertEqual('two', second.innerHTML);
@@ -135,12 +144,12 @@
 			this.assertEqual('2', second.innerHTML);
 		},
 
-		testClass: function() {
+		testClass: function () {
 			var second = element.childNodes[1];
 			this.assertEqual('c', second.getAttribute('class'));
 		},
 
-		testUndefined: function() {
+		testUndefined: function () {
 			var last;
 
 			ba.length = 5;
