@@ -116,7 +116,12 @@
 			ba.push('four');
 			this.assertEqual('four', ba[2]);
 
-			// TODO extend interception tests?
+			// Run all methods we touch the list on, just to make sure that they run with
+			// a null list.
+			ba.pop();
+			ba.push();
+			ba.reverse();
+			ba.shift();
 		}
       
   }, {testLog: "array"});
