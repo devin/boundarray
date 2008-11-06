@@ -154,6 +154,6 @@ var BoundArray = function (data, id, cl) {
 			list.removeChild(list.childNodes[0]);
 		}
 		return data.shift();
-	}
+	};
 
 };
