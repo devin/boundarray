@@ -1,81 +1,93 @@
+
 /*
  * TODO documentation
  */
-var BoundArray = function (data, id, cl) {
-	var list = document.getElementById(id);
-	var i, child;
-	var that = this;
+var BoundArray;
 
-	var defineSetter = function (index) {
+(function () {
+	var private_data, private_list, private_id, private_class;
+
+	var defineSetter = function (that, index) {
 		that.__defineSetter__(index, function (val) {
-			if (list) {
-				child = document.getElementById(id).childNodes[index];
+			if (private_list) {
+				child = private_list.childNodes[index];
 				child.innerHTML = val ? val : '';
 			}
 
-			data[index] = val;
+			private_data[index] = val;
 
 			return val;
 		});
 	};
 
-	var defineGetter = function (index) {
+	var defineGetter = function (that, index) {
 		that.__defineGetter__(index, function () {
-			return data[index];
+			return private_data[index];
 		});
 	};
 
-	var appendElement = function (index) {
-		if (list) {
+	var appendElement = function (that, index) {
+		if (private_list) {
 			child = document.createElement('li');
-			if (cl) {
-				child.setAttribute('class', cl);
+			if (private_class) {
+				child.setAttribute('class', private_class);
 			}
-			child.innerHTML = data[i] ? data[i] : '';
-			list.appendChild(child);
+			child.innerHTML = private_data[index] ? private_data[index] : '';
+			private_list.appendChild(child);
 		}
 	};
 
-	// Set interceptors for all existing entries in the data array.
-	// - intercept setter and update both the array and the HTML list element.
-	// - intercept getter to get data from the array.
-	for (i=0; i<data.length; i++) {
-		defineSetter(i);
-		defineGetter(i);
-	}
+	BoundArray = function(data, id, cl) {
+		var i, child;
+		var that = this;
 
-	// Clear and build initial list.
-	if (list) {
-		while (list.childNodes[0]) {
-			list.removeChild(list.childNodes[0]);
-		}
-		for (i=0; i<data.length; i++) {
-			appendElement(i);
-		}
-	}
+		private_data = data;
+		private_list = document.getElementById(id);
+		private_id = id;
+		private_class = cl;
 
-	// Special properties to mimic array.prototype.
-	// array.prototype.index and input
-	if (data.input) {
-		this.index = data.index;
-		this.input = data.input;
-	}
-	// array.prototype.length
-	this.__defineGetter__('length', function () {
-		return data.length;
-	});
-	this.__defineSetter__('length', function (val) {
-		// Set interceptors and grow list.
-		for (i=data.length; i<val; i++) {
-			defineSetter(i);
-			defineGetter(i);
-			
-			appendElement(i);
+		// Set interceptors for all existing entries in the data array.
+		// - intercept setter and update both the array and the HTML list element.
+		// - intercept getter to get data from the array.
+		for (i=0; i<private_data.length; i++) {
+			defineSetter(that, i);
+			defineGetter(that, i);
 		}
 
-		data.length = val;
-		return val;
-	});
+		// Clear and build initial list.
+		if (private_list) {
+			while (private_list.childNodes[0]) {
+				private_list.removeChild(private_list.childNodes[0]);
+			}
+			for (i=0; i<private_data.length; i++) {
+				appendElement(that, i);
+			}
+		}
+
+		// Special properties to mimic array.prototype.
+		// array.prototype.index and input
+		if (private_data.input) {
+			this.index = private_data.index;
+			this.input = private_data.input;
+		}
+		// array.prototype.length
+		this.__defineGetter__('length', function () {
+			return private_data.length;
+		});
+		this.__defineSetter__('length', function (val) {
+			// Set interceptors and grow list.
+			for (i=private_data.length; i<val; i++) {
+				defineSetter(that, i);
+				defineGetter(that, i);
+
+				appendElement(that, i);
+			}
+
+			private_data.length = val;
+			return val;
+		});
+
+	};
 
 	// Add Array.prototype methods.
 	// TODO
@@ -95,14 +107,14 @@ var BoundArray = function (data, id, cl) {
 	// Overwrite these for methods we specifically want to handle on the HTML list.
 	for (i=0; i<methods.length; i++) {
 		(function (method) {
-			that[method] = function () {
-				return data[method].apply(data, arguments);
+			BoundArray.prototype[method] = function () {
+				return private_data[method].apply(private_data, arguments);
 			};
 		}(methods[i]));
 	}
 
 	// Make all of these methods not enumerable.
-	this.propertyIsEnumerable = function (prop) {
+	BoundArray.prototype.propertyIsEnumerable = function (prop) {
 		if (prop==='index' || prop==='input' || prop==='length' ||
 				prop==='propertyIsEnumerable') {
 			return false;
@@ -112,49 +124,48 @@ var BoundArray = function (data, id, cl) {
 	};
 
 	// Overwite methods that we want to specifically handle on the HTML list.
-	this.pop = function () {
-		if (list) {
-			var last = list.childNodes[list.childNodes.length-1];
-			list.removeChild(last);
+	BoundArray.prototype.pop = function () {
+		if (private_list) {
+			var last = private_list.childNodes[private_list.childNodes.length-1];
+			private_list.removeChild(last);
 		}
-		return data.pop();
+		return private_data.pop();
 	};
-	this.push = function() {
-		var old_length = data.length;
-		var result = data.push.apply(data, arguments);
+	BoundArray.prototype.push = function() {
+		var old_length = private_data.length;
+		var result = private_data.push.apply(private_data, arguments);
 		var i, child;
 
 		for (i=old_length; i<old_length+arguments.length; i++) {
-			defineGetter(i);
-			defineSetter(i);
+			defineGetter(this, i);
+			defineSetter(this, i);
 
-			if (list) {
-				appendElement(i);
+			if (private_list) {
+				appendElement(this, i);
 			}
 		}
 
 		return result;
 	};
-	this.reverse = function() {
+	BoundArray.prototype.reverse = function() {
 		var first;
 		var i, child;
 
-		if (list) {
-			first =  list.childNodes[0];
-			for (i=1; i<list.childNodes.length; i++) {
-				child = list.childNodes[i];
-				list.insertBefore(child, first);
+		if (private_list) {
+			first = private_list.childNodes[0];
+			for (i=1; i<private_list.childNodes.length; i++) {
+				child = private_list.childNodes[i];
+				private_list.insertBefore(child, first);
 			}
 		}
-		
-		return data.reverse();
-	};
-	this.shift = function() {
-		if (list) {
-			list.removeChild(list.childNodes[0]);
-		}
-		return data.shift();
-	};
-	// TODO sort
 
-};
+		return private_data.reverse();
+	};
+	BoundArray.prototype.shift = function() {
+		if (private_list) {
+			private_list.removeChild(private_list.childNodes[0]);
+		}
+		return private_data.shift();
+	};
+
+}());
