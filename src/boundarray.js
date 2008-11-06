@@ -39,7 +39,6 @@ var BoundArray;
 
 	BoundArray = function(data, id, cl) {
 		var i, child;
-		var that = this;
 
 		private_data = data;
 		private_list = document.getElementById(id);
@@ -50,8 +49,8 @@ var BoundArray;
 		// - intercept setter and update both the array and the HTML list element.
 		// - intercept getter to get data from the array.
 		for (i=0; i<private_data.length; i++) {
-			defineSetter(that, i);
-			defineGetter(that, i);
+			defineSetter(this, i);
+			defineGetter(this, i);
 		}
 
 		// Clear and build initial list.
@@ -60,7 +59,7 @@ var BoundArray;
 				private_list.removeChild(private_list.childNodes[0]);
 			}
 			for (i=0; i<private_data.length; i++) {
-				appendElement(that, i);
+				appendElement(this, i);
 			}
 		}
 
@@ -77,10 +76,10 @@ var BoundArray;
 		this.__defineSetter__('length', function (val) {
 			// Set interceptors and grow list.
 			for (i=private_data.length; i<val; i++) {
-				defineSetter(that, i);
-				defineGetter(that, i);
+				defineSetter(this, i);
+				defineGetter(this, i);
 
-				appendElement(that, i);
+				appendElement(this, i);
 			}
 
 			private_data.length = val;
