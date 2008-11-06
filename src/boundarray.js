@@ -120,14 +120,19 @@ var BoundArray = function (data, id, cl) {
 		return data.pop();
 	};
 	this.push = function() {
+		var old_length = data.length;
 		var result = data.push.apply(data, arguments);
+		var i, child;
 
-		if (list) {
-			var i, child;
-			for (i=0; i<arguments.length; i++) {
+		for (i=old_length; i<old_length+arguments.length; i++) {
+			defineGetter(i);
+			defineSetter(i);
+
+			if (list) {
 				appendElement(i);
 			}
 		}
+
 		return result;
 	};
 
