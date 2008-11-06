@@ -122,6 +122,13 @@
 			ba.push();
 			ba.reverse();
 			ba.shift();
+		},
+
+		testTwo: function () {
+			var ab = new BoundArray(['four', 'five', 'six'], null, null);
+
+			this.assertEqual('one', ba[0]);
+			this.assertEqual('four', ab[0]);
 		}
       
   }, {testLog: "array"});
