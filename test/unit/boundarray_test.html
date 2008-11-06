@@ -176,12 +176,15 @@
 			var result;
 
 			this.assertEqual(3, element.childNodes.length);
+			this.assertEqual(3, ba.length);
 			result = ba.pop();
 			this.assertEqual('three', result);
 			this.assertEqual(2, element.childNodes.length);
+			this.assertEqual(2, ba.length);
 			result = ba.pop()
 			this.assertEqual('two', result)
 			this.assertEqual(1, element.childNodes.length);
+			this.assertEqual(1, ba.length);
 		},
 
 		testPush: function () {
@@ -191,9 +194,23 @@
 			result = ba.push('four');
 			this.assertEqual(4, result);
 			this.assertEqual(4, element.childNodes.length);
+			this.assertEqual(4, ba.length);
+			this.assertEqual('four', ba[3]);
 			result = ba.push('five', 'six', 'seven');
 			this.assertEqual(7, result);
 			this.assertEqual(7, element.childNodes.length);
+			this.assertEqual(7, ba.length);
+			this.assertEqual('seven', ba[6]);
+		},
+
+		testReverse: function () {
+			this.assertEqual(3, element.childNodes.length);
+			this.assertEqual('three', element.childNodes[2].innerHTML);
+			this.assertEqual('three', ba[2]);
+			ba.reverse();
+			this.assertEqual(3, element.childNodes.length);
+			this.assertEqual('one', element.childNodes[2].innerHTML);
+			this.assertEqual('one', ba[2]);
 		}
       
   }, {testLog: "methods"});
