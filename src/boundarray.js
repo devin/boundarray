@@ -114,6 +114,7 @@ var BoundArray;
 	// Make all of these methods not enumerable.
 	BoundArray.prototype.propertyIsEnumerable = function (prop) {
 		if (prop==='index' || prop==='input' || prop==='length' ||
+				prop==='data' || prop==='list' || prop==='id' || prop==='cl' ||
 				prop==='propertyIsEnumerable') {
 			return false;
 		} else {
