@@ -195,7 +195,7 @@ var BoundArray;
 
 			for (i=0; i<arguments.length-2; i++) {
 				// TODO factor out into createNewElement function?
-				// instead of a appendElement as is currently.
+				// instead of an appendElement as is currently.
 				child = document.createElement('li');
 				if (this.cl) {
 					child.setAttribute('class', this.cl);
@@ -218,13 +218,23 @@ var BoundArray;
 		var result = this.data.unshift.apply(this.data, arguments);
 		var i, child;
 
+		if (this.list) {
+			for (i=0; i<arguments.length; i++) {
+				// TODO factor out into createNewElement function?
+				// instead of an appendElement as is currently.
+				child = document.createElement('li');
+				if (this.cl) {
+					child.setAttribute('class', this.cl);
+				}
+				child.innerHTML = this.data[i] ? this.data[i] : '';
+
+				this.list.insertBefore(child, this.list.childNodes[i]);
+			}
+		}
+
 		for (i=old_length; i<this.data.length; i++) {
 			defineGetter(this, i);
 			defineSetter(this, i);
-
-			if (this.list) {
-				appendElement(this, i);
-			}
 		}
 
 		return result;
