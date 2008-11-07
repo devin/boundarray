@@ -242,6 +242,27 @@
 			this.assertEqual(1, ba.length);
 			this.assertEqual('two', result);
 		},
+
+		testSort: function() {
+			ba.sort();
+			this.assertEqual('one', element.childNodes[0].innerHTML);
+			this.assertEqual('one', ba[0]);
+			this.assertEqual('three', element.childNodes[1].innerHTML);
+			this.assertEqual('three', ba[1]);
+			this.assertEqual('two', element.childNodes[2].innerHTML);
+			this.assertEqual('two', ba[2]);
+			ba.sort(function (a, b) {
+				var values = ['one', 'two', 'three'];
+				
+				return values.indexOf(a) - values.indexOf(b);
+			});
+			this.assertEqual('one', element.childNodes[0].innerHTML);
+			this.assertEqual('one', ba[0]);
+			this.assertEqual('two', element.childNodes[1].innerHTML);
+			this.assertEqual('two', ba[1]);
+			this.assertEqual('three', element.childNodes[2].innerHTML);
+			this.assertEqual('three', ba[2]);
+		},
 	
 		testUnshift: function () {
 			var result;
