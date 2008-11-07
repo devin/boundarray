@@ -123,6 +123,7 @@ var BoundArray;
 	};
 
 	// Overwite methods that we want to specifically handle on the HTML list.
+	// Mutator methods
 	BoundArray.prototype.pop = function () {
 		if (this.list) {
 			var last = this.list.childNodes[this.list.childNodes.length-1];
@@ -165,6 +166,24 @@ var BoundArray;
 			this.list.removeChild(this.list.childNodes[0]);
 		}
 		return this.data.shift();
+	};
+	// TODO sort
+	// TODO splice
+	BoundArray.prototype.unshift = function() {
+		var old_length = this.data.length;
+		var result = this.data.unshift.apply(this.data, arguments);
+		var i, child;
+
+		for (i=old_length; i<old_length+arguments.length; i++) {
+			defineGetter(this, i);
+			defineSetter(this, i);
+
+			if (this.list) {
+				appendElement(this, i);
+			}
+		}
+
+		return result;
 	};
 
 }());
