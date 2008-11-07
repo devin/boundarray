@@ -238,6 +238,22 @@
 			this.assertEqual(1, element.childNodes.length);
 			this.assertEqual(1, ba.length);
 			this.assertEqual('two', result);
+		},
+	
+		testUnshift: function () {
+			var result;
+
+			this.assertEqual(3, element.childNodes.length);
+			result = ba.unshift('zero');
+			this.assertEqual(4, result);
+			this.assertEqual(4, element.childNodes.length);
+			this.assertEqual(4, ba.length);
+			this.assertEqual('zero', ba[0]);
+			result = ba.unshift('negative three', 'negative two', 'negative one');
+			this.assertEqual(7, result);
+			this.assertEqual(7, element.childNodes.length);
+			this.assertEqual(7, ba.length);
+			this.assertEqual('negative three', ba[0]);
 		}
       
   }, {testLog: "methods"});
