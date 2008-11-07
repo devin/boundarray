@@ -28,8 +28,8 @@ var BoundArray;
 	var appendElement = function (that, index) {
 		if (that.list) {
 			child = document.createElement('li');
-			if (that.class) {
-				child.setAttribute('class', that.class);
+			if (that.cl) {
+				child.setAttribute('class', that.cl);
 			}
 			child.innerHTML = that.data[index] ? that.data[index] : '';
 			that.list.appendChild(child);
@@ -42,7 +42,7 @@ var BoundArray;
 		this.data = data;
 		this.list = document.getElementById(id);
 		this.id = id;
-		this.class = cl;
+		this.cl = cl;
 
 		// Set interceptors for all existing entries in the data array.
 		// - intercept setter and update both the array and the HTML list element.
@@ -131,7 +131,7 @@ var BoundArray;
 		}
 		return this.data.pop();
 	};
-	BoundArray.prototype.push = function() {
+	BoundArray.prototype.push = function () {
 		var old_length = this.data.length;
 		var result = this.data.push.apply(this.data, arguments);
 		var i, child;
@@ -147,7 +147,7 @@ var BoundArray;
 
 		return result;
 	};
-	BoundArray.prototype.reverse = function() {
+	BoundArray.prototype.reverse = function () {
 		var first;
 		var i, child;
 
@@ -161,15 +161,30 @@ var BoundArray;
 
 		return this.data.reverse();
 	};
-	BoundArray.prototype.shift = function() {
+	BoundArray.prototype.shift = function () {
 		if (this.list) {
 			this.list.removeChild(this.list.childNodes[0]);
 		}
 		return this.data.shift();
 	};
-	// TODO sort
+	BoundArray.prototype.sort = function () {
+		var result = this.data.sort.apply(this.data, arguments);
+		var i, child;
+
+		// TODO better order for animation? replace?
+		if (this.list) {
+			while (this.list.childNodes[0]) {
+				this.list.removeChild(this.list.childNodes[0]);
+			}
+			for (i=0; i<this.data.length; i++) {
+				appendElement(this, i);
+			}
+		}
+		
+		return result;
+	};
 	// TODO splice
-	BoundArray.prototype.unshift = function() {
+	BoundArray.prototype.unshift = function () {
 		var old_length = this.data.length;
 		var result = this.data.unshift.apply(this.data, arguments);
 		var i, child;
