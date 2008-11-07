@@ -27,7 +27,7 @@
 
 	<div id="methods"></div>
   
-  <div id="testSandBox" style="display: none;">
+  <div id="testSandBox">
   	<ul id="boundlist"></ul>
   </div>
 </div>
@@ -262,6 +262,45 @@
 			this.assertEqual('two', ba[1]);
 			this.assertEqual('three', element.childNodes[2].innerHTML);
 			this.assertEqual('three', ba[2]);
+		},
+
+		testSplice: function () {
+			var result, expected;
+			var i;
+
+			result = ba.splice(1,2);
+			this.assertEqual(1, element.childNodes.length);
+			this.assertEqual(1, ba.length);
+			expected = ['two', 'three'];
+			this.assertEqual(expected.length, result.length);
+			for (i=0; i<result.length; i++) {
+				this.assertEqual(expected[i], result[i]);
+			}
+			ba = new BoundArray(['one', 'two', 'three'], 'boundlist', 'c');
+			this.assertEqual(3, element.childNodes.length);
+			this.assertEqual(3, ba.length);
+			result = ba.splice(1,1,'2');
+			this.assertEqual(3, element.childNodes.length)
+			this.assertEqual(3, ba.length);
+			this.assertEqual('2', ba[1]);
+			expected = ['two'];
+			this.assertEqual(expected.length, result.length);
+			for (i=0; i<result.length; i++) {
+				this.assertEqual(expected[i], result[i]);
+			}
+			ba = new BoundArray(['one', 'two', 'three'], 'boundlist', 'c');
+			result = ba.splice(1, 0, 'two and a half');
+			this.assertEqual(4, element.childNodes.length);
+			this.assertEqual(4, ba.length);
+			this.assertEqual('two and a half', element.childNodes[1].innerHTML);
+			this.assertEqual('two and a half', ba[1]);
+			this.assertEqual('two', element.childNodes[2].innerHTML);
+			this.assertEqual('two', ba[2]);
+			expected = [];
+			this.assertEqual(expected.length, result.length);
+			for (i=0; i<result.length; i++) {
+				this.assertEqual(expected[i], result[i]);
+			}
 		},
 	
 		testUnshift: function () {

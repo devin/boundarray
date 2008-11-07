@@ -136,7 +136,7 @@ var BoundArray;
 		var result = this.data.push.apply(this.data, arguments);
 		var i, child;
 
-		for (i=old_length; i<old_length+arguments.length; i++) {
+		for (i=old_length; i<this.data.length; i++) {
 			defineGetter(this, i);
 			defineSetter(this, i);
 
@@ -183,13 +183,42 @@ var BoundArray;
 		
 		return result;
 	};
-	// TODO splice
+	BoundArray.prototype.splice = function() {
+		var old_length = this.data.length;
+		var result = this.data.splice.apply(this.data, arguments);
+		var i, child;
+
+		if (this.list) {
+			for (i=0; i<arguments[1]; i++) {
+				this.list.removeChild(this.list.childNodes[arguments[0]]);
+			}
+
+			for (i=0; i<arguments.length-2; i++) {
+				// TODO factor out into createNewElement function?
+				// instead of a appendElement as is currently.
+				child = document.createElement('li');
+				if (this.cl) {
+					child.setAttribute('class', this.cl);
+				}
+				child.innerHTML = this.data[arguments[0]+i] ? this.data[arguments[0]+i] : '';
+
+				this.list.insertBefore(child, this.list.childNodes[arguments[0]+i]);
+			}
+		}
+
+		for (i=old_length; i<this.data.length; i++) {
+			defineGetter(this, i);
+			defineSetter(this, i);
+		}
+
+		return result;
+	};
 	BoundArray.prototype.unshift = function () {
 		var old_length = this.data.length;
 		var result = this.data.unshift.apply(this.data, arguments);
 		var i, child;
 
-		for (i=old_length; i<old_length+arguments.length; i++) {
+		for (i=old_length; i<this.data.length; i++) {
 			defineGetter(this, i);
 			defineSetter(this, i);
 
