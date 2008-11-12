@@ -155,7 +155,7 @@ var BoundArray;
 		if (this.list) {
 			remove = function() {
 				that.list.removeChild(that.list.childNodes[index]);
-			}
+			};
 
 			if (jQueryFound()) {
 				$('#' + this.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', remove);
