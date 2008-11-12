@@ -363,17 +363,7 @@
 		},
 
 		testSpliceRemovesElement: function () {
-			ba.splice(1, 2);
-			this.assertEqual(3, element.childNodes.length);
-			this.assertEqual('', element.childNodes[1].innerHTML);
-			this.assertEqual('', element.childNodes[2].innerHTML);
-			this.assertEqual(1, ba.length);
-			ba = new BoundArray(['one', 'two', 'three'], 'boundlist');
-			ba.splice(1, 2);
-			this.assertEqual(3, element.childNodes.length);
-			this.assertEqual('2', element.childNodes[1].innerHTML);
-			this.assertEqual('', element.childNodes[2].innerHTML);
-			this.assertEqual(1, ba.length);
+			// TODO
 		}
       
   }, {testLog: "bugs"});
