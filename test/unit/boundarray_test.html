@@ -26,6 +26,8 @@
 	<div id="list"></div>
 
 	<div id="methods"></div>
+
+	<div id="bugs"></div>
   
   <div id="testSandBox">
   	<ul id="boundlist"></ul>
@@ -324,6 +326,32 @@
 		}
       
   }, {testLog: "methods"});
+
+	// Bug specific tests.
+  new Test.Unit.Runner({
+    setup: function () {
+      ba = new BoundArray(['one', 'two', 'three'], 'boundlist', 'c');
+			element = document.getElementById('boundlist');
+    },
+    
+    teardown: function () {
+      
+    },
+
+		// thought it was, but never was a bug.
+		testPushArguments: function () {
+			var result;
+
+			this.assertEqual(3, element.childNodes.length);
+			this.assertEqual(3, ba.length);
+			result = ba.push('four', 'five');
+			this.assertEqual(5, element.childNodes.length);
+			this.assertEqual(5, ba.length);
+			this.assertEqual('four', element.childNodes[3].innerHTML);
+			this.assertEqual('five', element.childNodes[4].innerHTML);
+		}
+      
+  }, {testLog: "bugs"});
 
 </script>
 </body>
