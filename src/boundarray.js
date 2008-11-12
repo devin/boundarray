@@ -15,23 +15,24 @@ var BoundArray;
 
 	var defineSetter = function (that, index) {
 		that.__defineSetter__(index, function (val) {
+			var change;
+			
 			that.data[index] = val;
 
-			var child;
 			if (that.list) {
+				change = function () {
+					var child = that.list.childNodes[index];
+					child.innerHTML = val ? val : '';
+				};
+				
 				if (jQueryFound()) {
-					$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', function () {
-								child = that.list.childNodes[index];
-								child.innerHTML = val ? val : '';
-							});
-
+					$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', change);
 					$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideDown('normal');
 				} else {
-					child = that.list.childNodes[index];
-					child.innerHTML = val ? val : '';
+					change();
 				}
 			}
-			
+
 			return val;
 		});
 	};
@@ -149,19 +150,20 @@ var BoundArray;
 	BoundArray.prototype.pop = function () {
 		var that = this;
 		var index = this.data.length - 1;
-		var last;
+		var remove;
 
 		if (this.list) {
-			last = this.list.childNodes[index];
-			
+			remove = function() {
+				that.list.removeChild(that.list.childNodes[index]);
+			}
+
 			if (jQueryFound()) {
-				$('#' + this.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', function () {
-							that.list.removeChild(last);
-						});
+				$('#' + this.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', remove);
 			} else {
-				this.list.removeChild(last);
+				remove();
 			}
 		}
+
 		return this.data.pop();
 	};
 	BoundArray.prototype.push = function () {
@@ -174,15 +176,15 @@ var BoundArray;
 			defineSetter(this, i);
 
 			if (this.list) {
+				child = createNewElement(this, i);
 				
 				if (jQueryFound()) {
-					child = createNewElement(this, i);
 					child.style.display = 'none';
 					this.list.appendChild(child);
 					
 					$('#' + this.id + ' li:last').slideDown('normal');
 				} else {
-					this.list.appendChild(createNewElement(this, i));
+					this.list.appendChild(child);
 				}
 			}
 		}
