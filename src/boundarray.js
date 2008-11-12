@@ -174,7 +174,16 @@ var BoundArray;
 			defineSetter(this, i);
 
 			if (this.list) {
-				this.list.appendChild(createNewElement(this, i));
+				
+				if (jQueryFound()) {
+					child = createNewElement(this, i);
+					child.style.display = 'none';
+					this.list.appendChild(child);
+					
+					$('#' + this.id + ' li:last').slideDown('normal');
+				} else {
+					this.list.appendChild(createNewElement(this, i));
+				}
 			}
 		}
 
