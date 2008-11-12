@@ -26,8 +26,6 @@
 	<div id="list"></div>
 
 	<div id="methods"></div>
-
-	<div id="bugs"></div>
   
   <div id="testSandBox">
   	<ul id="boundlist"></ul>
@@ -326,47 +324,6 @@
 		}
       
   }, {testLog: "methods"});
-
-	// Method specific tests.
-  new Test.Unit.Runner({
-    setup: function () {
-      ba = new BoundArray(['one', 'two', 'three'], 'boundlist', 'c');
-			element = document.getElementById('boundlist');
-    },
-    
-    teardown: function () {
-      
-    },
-
-		testPopRemovesElement: function () {
-			this.assertEqual(3, element.childNodes.length);
-			this.assertEqual(3, ba.length);
-			ba.pop();
-			this.assertEqual(3, element.childNodes.length);
-			this.assertEqual('', element.childNodes[2].innerHTML);
-			this.assertEqual(2, ba.length);
-			ba[2] = '3';
-			this.assertEqual(3, element.childNodes.length);
-			this.assertEqual(3, ba.length);
-		},
-
-		testShiftRemovesElement: function () {
-			this.assertEqual(3, element.childNodes.length);
-			this.assertEqual(3, ba.length);
-			ba.shift();
-			this.assertEqual(3, element.childNodes.length);
-			this.assertEqual('', element.childNodes[0].innerHTML);
-			this.assertEqual(2, ba.length);
-			ba[0] = '1';
-			this.assertEqual(3, element.childNodes.length);
-			this.assertEqual(3, ba.length);
-		},
-
-		testSpliceRemovesElement: function () {
-			// TODO
-		}
-      
-  }, {testLog: "bugs"});
 
 </script>
 </body>
