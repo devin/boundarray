@@ -158,6 +158,7 @@
 			
 			this.assertEqual('two', second.innerHTML);
 			ba[1] = '2';
+			second = element.childNodes[1];
 			this.assertEqual('2', second.innerHTML);
 		},
 

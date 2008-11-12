@@ -20,7 +20,10 @@ var BoundArray;
 			var child;
 			if (that.list) {
 				if (jQueryFound()) {
-					$('#' + that.id + 'li:nth-child(' + (index + 1) + ')').hide();
+					// TODO animate removals.
+					// this is complicated, because things don't happen linearly then,
+					// so you can get references to objects that are getting deleted
+					// shortly, etc.
 					that.list.removeChild(that.list.childNodes[index]);
 
 					child = createNewElement(that, index);
@@ -81,7 +84,7 @@ var BoundArray;
 				this.list.removeChild(this.list.childNodes[0]);
 			}
 			for (i=0; i<this.data.length; i++) {
-				this.list.appendChild(createNewElement(this, i));
+					this.list.appendChild(createNewElement(this, i));
 			}
 		}
 
