@@ -15,13 +15,26 @@ var BoundArray;
 
 	var defineSetter = function (that, index) {
 		that.__defineSetter__(index, function (val) {
-			if (that.list) {
-				child = that.list.childNodes[index];
-				child.innerHTML = val ? val : '';
-			}
-
 			that.data[index] = val;
 
+			var child;
+			if (that.list) {
+				if (jQueryFound()) {
+					$('#' + that.id + 'li:nth-child(' + (index + 1) + ')').hide();
+					that.list.removeChild(that.list.childNodes[index]);
+
+					child = createNewElement(that, index);
+					child.style.display = 'none';
+					that.list.insertBefore(child, that.list.childNodes[index]);
+					$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideDown('normal');
+				} else {
+					that.list.removeChild(that.list.childNodes[index]);
+
+					child = createNewElement(that, index);
+					that.list.insertBefore(child, that.list.childNodes[index]);
+				}
+			}
+			
 			return val;
 		});
 	};
@@ -47,7 +60,6 @@ var BoundArray;
 	};
 
 	BoundArray = function(data, id, cl) {
-		alert(jQueryFound());
 		var i, child;
 
 		this.data = data;

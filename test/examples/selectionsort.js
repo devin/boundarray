@@ -32,7 +32,7 @@ var try_selectionsort = function () {
 
 	var names = new BoundArray(array, 'names');
 
-	selectionsort(names,50);
+	selectionsort(names,1000);
 };
 
 window.onload = try_selectionsort;
