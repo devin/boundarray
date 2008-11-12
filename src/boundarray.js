@@ -35,14 +35,19 @@ var BoundArray;
 	var createNewElement = function(that, index) {
 		child = document.createElement('li');
 		if (that.cl) {
-			child.setAttribute('class', that.cl)
+			child.setAttribute('class', that.cl);
 		}
 		child.innerHTML = that.data[index] ? that.data[index] : '';
 
 		return child;
 	};
 
+	var jQueryFound = function() {
+		return typeof jQuery==='function';
+	};
+
 	BoundArray = function(data, id, cl) {
+		alert(jQueryFound());
 		var i, child;
 
 		this.data = data;

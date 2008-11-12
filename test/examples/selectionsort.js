@@ -18,7 +18,7 @@ var selectionsort = function (array, delay) {
 
 		i++;
 		if (i<array.length-1) {
-			setTimeout(step, delay)
+			setTimeout(step, delay);
 		}
 	})();
 };
