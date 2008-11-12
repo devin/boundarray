@@ -19,7 +19,7 @@ var BoundArray;
 
 			var child;
 			if (that.list) {
-				if (jQueryFound()) {					
+				if (jQueryFound()) {
 					$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', function () {
 								child = that.list.childNodes[index];
 								child.innerHTML = val ? val : '';
@@ -147,9 +147,20 @@ var BoundArray;
 	// Overwite methods that we want to specifically handle on the HTML list.
 	// Mutator methods
 	BoundArray.prototype.pop = function () {
+		var that = this;
+		var index = this.data.length - 1;
+		var last;
+
 		if (this.list) {
-			var last = this.list.childNodes[this.list.childNodes.length-1];
-			this.list.removeChild(last);
+			last = this.list.childNodes[index];
+			
+			if (jQueryFound()) {
+				$('#' + this.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', function () {
+							that.list.removeChild(last);
+						});
+			} else {
+				this.list.removeChild(last);
+			}
 		}
 		return this.data.pop();
 	};
