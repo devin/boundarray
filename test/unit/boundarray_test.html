@@ -229,6 +229,10 @@
 			this.assertEqual(3, element.childNodes.length);
 			this.assertEqual('one', element.childNodes[2].innerHTML);
 			this.assertEqual('one', ba[2]);
+			this.assertEqual('two', element.childNodes[1].innerHTML);
+			this.assertEqual('two', ba[1]);
+			this.assertEqual('three', element.childNodes[0].innerHTML);
+			this.assertEqual('three', ba[0]);
 		},
 
 		testShift: function () {

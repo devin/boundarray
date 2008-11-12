@@ -192,14 +192,12 @@ var BoundArray;
 		return result;
 	};
 	BoundArray.prototype.reverse = function () {
-		var first;
 		var i, child;
 
 		if (this.list) {
-			first = this.list.childNodes[0];
 			for (i=1; i<this.list.childNodes.length; i++) {
 				child = this.list.childNodes[i];
-				this.list.insertBefore(child, first);
+				this.list.insertBefore(child, this.list.childNodes[0]);
 			}
 		}
 
