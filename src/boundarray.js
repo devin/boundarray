@@ -25,15 +25,14 @@ var BoundArray;
 		});
 	};
 
-	var appendElement = function (that, index) {
-		if (that.list) {
-			child = document.createElement('li');
-			if (that.cl) {
-				child.setAttribute('class', that.cl);
-			}
-			child.innerHTML = that.data[index] ? that.data[index] : '';
-			that.list.appendChild(child);
+	var createNewElement = function(that, index) {
+		child = document.createElement('li');
+		if (that.cl) {
+			child.setAttribute('class', that.cl)
 		}
+		child.innerHTML = that.data[index] ? that.data[index] : '';
+
+		return child;
 	};
 
 	BoundArray = function(data, id, cl) {
@@ -58,7 +57,7 @@ var BoundArray;
 				this.list.removeChild(this.list.childNodes[0]);
 			}
 			for (i=0; i<this.data.length; i++) {
-				appendElement(this, i);
+				this.list.appendChild(createNewElement(this, i));
 			}
 		}
 
@@ -78,7 +77,9 @@ var BoundArray;
 				defineSetter(this, i);
 				defineGetter(this, i);
 
-				appendElement(this, i);
+				if (this.list) {
+					this.list.appendChild(createNewElement(this, i));
+				}
 			}
 
 			this.data.length = val;
@@ -88,7 +89,7 @@ var BoundArray;
 	};
 
 	// Add Array.prototype methods.
-	// TODO
+	// HACK
 	// There doesn't seem to be a good way to loop over all built-in methods on
 	// Array.prototype, so for now this will have to be hardcoded.
 	var methods = [
@@ -141,7 +142,7 @@ var BoundArray;
 			defineSetter(this, i);
 
 			if (this.list) {
-				appendElement(this, i);
+				this.list.appendChild(createNewElement(this, i));
 			}
 		}
 
@@ -177,7 +178,7 @@ var BoundArray;
 				this.list.removeChild(this.list.childNodes[0]);
 			}
 			for (i=0; i<this.data.length; i++) {
-				appendElement(this, i);
+				this.list.appendChild(createNewElement(this, i));
 			}
 		}
 		
@@ -194,13 +195,7 @@ var BoundArray;
 			}
 
 			for (i=0; i<arguments.length-2; i++) {
-				// TODO factor out into createNewElement function?
-				// instead of an appendElement as is currently.
-				child = document.createElement('li');
-				if (this.cl) {
-					child.setAttribute('class', this.cl);
-				}
-				child.innerHTML = this.data[arguments[0]+i] ? this.data[arguments[0]+i] : '';
+				child = createNewElement(this, arguments[0]+i);
 
 				this.list.insertBefore(child, this.list.childNodes[arguments[0]+i]);
 			}
@@ -220,13 +215,7 @@ var BoundArray;
 
 		if (this.list) {
 			for (i=0; i<arguments.length; i++) {
-				// TODO factor out into createNewElement function?
-				// instead of an appendElement as is currently.
-				child = document.createElement('li');
-				if (this.cl) {
-					child.setAttribute('class', this.cl);
-				}
-				child.innerHTML = this.data[i] ? this.data[i] : '';
+				child = createNewElement(this, i);
 
 				this.list.insertBefore(child, this.list.childNodes[i]);
 			}
