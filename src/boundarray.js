@@ -19,22 +19,16 @@ var BoundArray;
 
 			var child;
 			if (that.list) {
-				if (jQueryFound()) {
-					// TODO animate removals.
-					// this is complicated, because things don't happen linearly then,
-					// so you can get references to objects that are getting deleted
-					// shortly, etc.
-					that.list.removeChild(that.list.childNodes[index]);
+				if (jQueryFound()) {					
+					$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', function () {
+								child = that.list.childNodes[index];
+								child.innerHTML = val ? val : '';
+							});
 
-					child = createNewElement(that, index);
-					child.style.display = 'none';
-					that.list.insertBefore(child, that.list.childNodes[index]);
 					$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideDown('normal');
 				} else {
-					that.list.removeChild(that.list.childNodes[index]);
-
-					child = createNewElement(that, index);
-					that.list.insertBefore(child, that.list.childNodes[index]);
+					child = that.list.childNodes[index];
+					child.innerHTML = val ? val : '';
 				}
 			}
 			
