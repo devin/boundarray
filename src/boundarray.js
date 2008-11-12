@@ -1,6 +1,13 @@
 
 /*
- * TODO documentation
+ * Creates a bound JavaScript array with a HTML list that from then on,
+ * handles the glue code for keeping the HTML list in sync with the
+ * JavaScript array.
+ * Behaves, with the single exception of implicit growth, exactly like a
+ * JavaScript array, but has the side effect of making any changes to the
+ * HTML list as well.
+ *
+ * Copyright (c) 2008 Devin Naquin
  */
 var BoundArray;
 
