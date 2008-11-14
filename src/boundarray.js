@@ -12,22 +12,24 @@
 var BoundArray;
 
 (function () {
-	
+
+	// Utility functions.
+	// Managing list element ids.
 	var elementId = function (id, index) {
 		return 'boundarray-' + id + '-' + index;
 	};
-	
-	var deleteIdCount = 0;
-	
-	var deleteId = function () {
-		deleteIdCount++;
-		return 'boundarray-' + deleteIdCount + '-todelete';
-	};
+	var deleteId = (function () {
+		var deleteIdCount = 0;
+		
+		return function () {
+			deleteIdCount++;
+			return 'boundarray-' + deleteIdCount + '-todelete';
+		};
+	})();
 
+	// Getter and setters for indexed data.
 	var defineSetter = function (that, index) {
-		that.__defineSetter__(index, function (val) {
-			var change;
-			
+		that.__defineSetter__(index, function (val) {			
 			that.data[index] = val;
 
 			removeElement(that, index);
@@ -36,21 +38,20 @@ var BoundArray;
 			return val;
 		});
 	};
-
 	var defineGetter = function (that, index) {
 		that.__defineGetter__(index, function () {
 			return that.data[index];
 		});
 	};
 
+	// jQuery utility.
 	var jQueryFound = function () {
 		return typeof jQuery==='function';
 	};
 
+	// List element management.
 	var createNewElement = function (that, index) {
-		var i, child;
-
-		child = document.createElement('li');
+		var child = document.createElement('li');
 		if (that.cl) {
 			child.setAttribute('class', that.cl ? that.cl : '');
 		}
@@ -58,13 +59,13 @@ var BoundArray;
 
 		return child;
 	};
-
 	var insertElement = function (that, child, index) {
-		var next;
+		var i, next;
 
 		if (that.list) {
 			// Manage list's ids.
-			for (i=that.data.length-1; i>index-1; i--) {
+			for (i=Math.min(that.data.length-1, that.list.childNodes.length-1);
+						i>index-1; i--) {
 				next = document.getElementById(elementId(that.id, i));
 				if (next) {
 					next.setAttribute('id', elementId(that.id, i+1));
@@ -73,7 +74,7 @@ var BoundArray;
 			child.setAttribute('id', elementId(that.id, index));
 
 			child.style.display = 'none';
-			that.list.insertBefore(child, document.getElementById(elementId(that.id, index+1)));
+			that.list.insertBefore(child, next);
 
 			if (jQueryFound()) {
 				$('#' + elementId(that.id, index)).slideDown('normal');
@@ -82,10 +83,10 @@ var BoundArray;
 			}
 		}
 	};
-
 	var removeElement = function (that, index) {
-		var i;
-		var child, next, remove, deleted_id;
+		var child;
+		var i, next;
+		var remove, deleted_id;
 
 		if (that.list) {
 			child = document.getElementById(elementId(that.id, index));
@@ -93,7 +94,8 @@ var BoundArray;
 
 			// Manage list's ids.
 			child.setAttribute('id', deleted_id);
-			for (i=index+1; i<that.data.length; i++) {
+			for (i=index+1; i<Math.min(that.data.length, that.list.childNodes.length);
+					i++) {
 				next = document.getElementById(elementId(that.id, i));
 				if (next) {
 					next.setAttribute('id', elementId(that.id, i-1));
@@ -237,9 +239,7 @@ var BoundArray;
 		return this.data.reverse();
 	};
 	BoundArray.prototype.shift = function () {
-		if (this.list) {
-			removeElement(this, 0);
-		}
+		removeElement(this, 0);
 		return this.data.shift();
 	};
 	BoundArray.prototype.sort = function () {
