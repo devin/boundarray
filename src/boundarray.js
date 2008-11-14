@@ -12,6 +12,16 @@
 var BoundArray;
 
 (function () {
+	
+	var getId = function (id, index) {
+		return 'boundarray-' + id + '-' + index;
+	};
+
+	var deleteCount = 0;
+	var getIdToDelete = function () {
+		deleteCount++;
+		return 'boundarray-' + deleteCount + '-todelete';
+	};
 
 	var defineSetter = function (that, index) {
 		that.__defineSetter__(index, function (val) {
@@ -19,7 +29,7 @@ var BoundArray;
 			
 			that.data[index] = val;
 
-			changeElement(this, val, index);
+			changeElement(this, createNewElement(that, index), index);
 
 			return val;
 		});
@@ -31,27 +41,40 @@ var BoundArray;
 		});
 	};
 
+	var jQueryFound = function () {
+		return typeof jQuery==='function';
+	};
+
 	var createNewElement = function (that, index) {
+		var i, child;
+
 		child = document.createElement('li');
 		if (that.cl) {
-			child.setAttribute('class', that.cl);
+			child.setAttribute('class', that.cl ? that.cl : '');
 		}
 		child.innerHTML = that.data[index] ? that.data[index] : '';
 
 		return child;
 	};
 
-	var jQueryFound = function () {
-		return typeof jQuery==='function';
-	};
-
 	var insertElement = function (that, child, index) {
+		var next;
+
 		if (that.list) {
+			// Manage list's ids.
+			for (i=that.data.length-1; i>index-1; i--) {
+				next = document.getElementById(getId(that.id, i));
+				if (next) {
+					next.setAttribute('id', getId(that.id, i+1));
+				}
+			}
+			child.setAttribute('id', getId(that.id, index));
+
 			child.style.display = 'none';
-			that.list.insertBefore(child, that.list.childNodes[index]);
-			
+			that.list.insertBefore(child, document.getElementById(getId(that.id, index+1)));
+
 			if (jQueryFound()) {
-				$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideDown('normal');
+				$('#' + getId(that.id, index)).slideDown('normal');
 			} else {
 				child.style.display = 'block';
 			}
@@ -59,16 +82,28 @@ var BoundArray;
 	};
 
 	var removeElement = function (that, index) {
-		var child, remove;
+		var i;
+		var child, next, remove, deleteId;
 
 		if (that.list) {
-			child = that.list.childNodes[index];
+			child = document.getElementById(getId(that.id, index));
+			deleteId = getIdToDelete();
+
+			// Manage list's ids.
+			child.setAttribute('id', deleteId);
+			for (i=index+1; i<that.data.length; i++) {
+				next = document.getElementById(getId(that.id, i));
+				if (next) {
+					next.setAttribute('id', getId(that.id, i-1));
+				}
+			}
+
 			remove = function () {
 				that.list.removeChild(child);
 			};
 
 			if (jQueryFound()) {
-				$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', remove);
+				$('#' + deleteId).slideUp('normal', remove);
 			} else {
 				remove();
 			}
@@ -77,22 +112,9 @@ var BoundArray;
 		return child;
 	};
 
-	var changeElement = function (that, new_val, index) {
-		var change;
-
-		if (that.list) {
-			change = function () {
-				var child = that.list.childNodes[index];
-				child.innerHTML = new_val ? new_val : '';
-			};
-			
-			if (jQueryFound()) {
-				$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', change);
-				$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideDown('normal');
-			} else {
-				change();
-			}
-		}
+	var changeElement = function (that, new_child, index) {
+		removeElement(that, index);
+		insertElement(that, new_child, index);
 	};
 
 	BoundArray = function (data, id, cl) {
@@ -117,7 +139,7 @@ var BoundArray;
 				this.list.removeChild(this.list.childNodes[0]);
 			}
 			for (i=0; i<this.data.length; i++) {
-				this.list.appendChild(createNewElement(this, i));
+				insertElement(this, createNewElement(this, i), i);
 			}
 		}
 
@@ -138,7 +160,7 @@ var BoundArray;
 				defineGetter(this, i);
 
 				if (this.list) {
-					this.list.appendChild(createNewElement(this, i));
+					insertElement(this, createNewElement(this, i), i);
 				}
 			}
 
@@ -221,6 +243,7 @@ var BoundArray;
 		if (this.list) {
 			// TODO broken. i really need to do removal by id.
 			// keep track of ids then i can do any removal i want.
+			// id=boundarray-index into array? keep up to date?
 			removeElement(this, 0);
 		}
 		return this.data.shift();
