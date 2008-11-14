@@ -19,19 +19,7 @@ var BoundArray;
 			
 			that.data[index] = val;
 
-			if (that.list) {
-				change = function () {
-					var child = that.list.childNodes[index];
-					child.innerHTML = val ? val : '';
-				};
-				
-				if (jQueryFound()) {
-					$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', change);
-					$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideDown('normal');
-				} else {
-					change();
-				}
-			}
+			changeElement(this, val, index);
 
 			return val;
 		});
@@ -43,7 +31,7 @@ var BoundArray;
 		});
 	};
 
-	var createNewElement = function(that, index) {
+	var createNewElement = function (that, index) {
 		child = document.createElement('li');
 		if (that.cl) {
 			child.setAttribute('class', that.cl);
@@ -53,11 +41,59 @@ var BoundArray;
 		return child;
 	};
 
-	var jQueryFound = function() {
+	var jQueryFound = function () {
 		return typeof jQuery==='function';
 	};
 
-	BoundArray = function(data, id, cl) {
+	var insertElement = function (that, child, index) {
+		if (that.list) {
+			child.style.display = 'none';
+			that.list.insertBefore(child, that.list.childNodes[index]);
+			
+			if (jQueryFound()) {
+				$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideDown('normal');
+			} else {
+				child.style.display = 'block';
+			}
+		}
+	};
+
+	var removeElement = function (that, index) {
+		var remove;
+
+		if (that.list) {
+			remove = function () {
+				that.list.removeChild(that.list.childNodes[index]);
+			};
+
+			if (jQueryFound()) {
+				$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', remove);
+			} else {
+				remove();
+			}
+		}
+	};
+
+	// TODO change new_val to new_child
+	var changeElement = function (that, new_val, index) {
+		var change;
+
+		if (that.list) {
+			change = function () {
+				var child = that.list.childNodes[index];
+				child.innerHTML = new_val ? new_val : '';
+			};
+			
+			if (jQueryFound()) {
+				$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', change);
+				$('#' + that.id + ' li:nth-child(' + (index + 1) + ')').slideDown('normal');
+			} else {
+				change();
+			}
+		}
+	};
+
+	BoundArray = function (data, id, cl) {
 		var i, child;
 
 		this.data = data;
@@ -79,7 +115,7 @@ var BoundArray;
 				this.list.removeChild(this.list.childNodes[0]);
 			}
 			for (i=0; i<this.data.length; i++) {
-					this.list.appendChild(createNewElement(this, i));
+				this.list.appendChild(createNewElement(this, i));
 			}
 		}
 
@@ -148,45 +184,22 @@ var BoundArray;
 	// Overwite methods that we want to specifically handle on the HTML list.
 	// Mutator methods
 	BoundArray.prototype.pop = function () {
-		var that = this;
 		var index = this.data.length - 1;
-		var remove;
 
-		if (this.list) {
-			remove = function() {
-				that.list.removeChild(that.list.childNodes[index]);
-			};
-
-			if (jQueryFound()) {
-				$('#' + this.id + ' li:nth-child(' + (index + 1) + ')').slideUp('normal', remove);
-			} else {
-				remove();
-			}
-		}
+		removeElement(this, index);
 
 		return this.data.pop();
 	};
 	BoundArray.prototype.push = function () {
 		var old_length = this.data.length;
 		var result = this.data.push.apply(this.data, arguments);
-		var i, child;
+		var i;
 
 		for (i=old_length; i<this.data.length; i++) {
 			defineGetter(this, i);
 			defineSetter(this, i);
 
-			if (this.list) {
-				child = createNewElement(this, i);
-				
-				if (jQueryFound()) {
-					child.style.display = 'none';
-					this.list.appendChild(child);
-					
-					$('#' + this.id + ' li:last').slideDown('normal');
-				} else {
-					this.list.appendChild(child);
-				}
-			}
+			insertElement(this, createNewElement(this, i), i);
 		}
 
 		return result;
@@ -225,7 +238,7 @@ var BoundArray;
 		
 		return result;
 	};
-	BoundArray.prototype.splice = function() {
+	BoundArray.prototype.splice = function () {
 		var old_length = this.data.length;
 		var result = this.data.splice.apply(this.data, arguments);
 		var i, child;
