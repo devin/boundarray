@@ -5,12 +5,91 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>example_selectionsort</title>
-	<!-- Date: 2008-11-07 -->
-  <script src="../../src/boundarray.js" type="text/javascript"></script>
-	<script src="../../lib/jquery-1.2.6.js" type="text/javascript"></script>
-	<script src="selectionsort.js" type="text/javascript" charset="utf-8"></script>
+	<!-- Date: 2008-11-13 -->
+	<link rel="stylesheet" href="example.css" type="text/css" charset="utf-8">
+
+	<!-- Syntax coloring. -->
+	<link rel="stylesheet" href="../../lib/sh/SyntaxHighlighter.css" type="text/css" charset="utf-8">
+	<script src="../../lib/sh/shCore.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../lib/sh/shBrushJScript.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../lib/sh/shBrushXml.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		window.onload = function () {
+			dp.SyntaxHighlighter.HighlightAll('code');
+		}
+	</script>
+
 </head>
 <body>
-	<ul id="names" style="list-style-type: none;"></ul>
+<div id="explanation">
+	<h2>boundarray</h2>
+	<h3>Example: Selection Sort</h3>
+	<p>To do selection sort using a BoundArray, add a script tag to include boundarray.js and an empty list with an id. This uses an unordered list with the id "names":</p>
+	<div class="code">
+		<pre name="code" class="html:nogutter:nocontrols">
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+   &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+	&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
+	&lt;title&gt;selectionsort&lt;/title&gt;
+	&lt;!-- Date: 2008-11-07 --&gt;
+	&lt;script src=&quot;../../src/boundarray.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+	&lt;script src=&quot;../../lib/jquery-1.2.6.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+	&lt;script src=&quot;selectionsort.js&quot; type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;ul id=&quot;names&quot; style=&quot;list-style-type: none;&quot;&gt;&lt;li&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;/body&gt;
+		</pre>
+	</div>
+	<p>Now in our JavaScript file, we can bind to that list with <code>var names = new BoundArray(array, 'names');</code>. From then on, we can use <code>names</code> like we would any other JavaScript array and it's changes will be mirrored in the list with id "names".</p>
+	<p>Note how the <code>selectionsort</code> function manipulates the <code>names</code> array, but does none of the code to keep the HTML list in sync. All of this glue code is handled by <code>BoundArray</code>.</p>
+	<div class="code">
+		<pre name="code" class="javascript:nogutter:nocontrols">
+var selectionsort = function (array, delay) {
+	// Done only using recursive iteration, because I want to delay between steps.
+	var i = 0;
+	(function step() {
+		var min_at = i;
+		var j, tmp;
+
+		for (j=i+1; j&lt;array.length; j++) {
+			if (array[j] &lt; array[min_at]) {
+				min_at = j;
+			}
+		}
+
+		tmp = array[i];
+		array[i] = array[min_at];
+		array[min_at] = tmp;
+
+		i++;
+		if (i&lt;array.length-1) {
+			setTimeout(step, delay);
+		}
+	})();
+};
+
+var try_selectionsort = function () {
+	var array = [&#x27;jessica&#x27;, &#x27;ashley&#x27;, &#x27;brittany&#x27;, &#x27;amanda&#x27;, &#x27;stephanie&#x27;,
+			&#x27;jennifer&#x27;, &#x27;samantha&#x27;, &#x27;sarah&#x27;, &#x27;megan&#x27;, &#x27;lauren&#x27;, &#x27;elizabeth&#x27;,
+			&#x27;emily&#x27;, &#x27;amber&#x27;, &#x27;nicole&#x27;, &#x27;rachel&#x27;, &#x27;kayla&#x27;, &#x27;heather&#x27;, &#x27;melissa&#x27;,
+			&#x27;rebecca&#x27;, &#x27;michelle&#x27;, &#x27;danielle&#x27;, &#x27;courtney&#x27;, &#x27;tiffany&#x27;, &#x27;chelsea&#x27;,
+			&#x27;christina&#x27;, &#x27;katherine&#x27;, &#x27;kelsey&#x27;, &#x27;maria&#x27;, &#x27;laura&#x27;, &#x27;jasmine&#x27;];
+
+	var names = new BoundArray(array, &#x27;names&#x27;);
+
+	selectionsort(names,1000);
+};
+
+window.onload = try_selectionsort;
+		</pre>
+	</div>
+</div>
+<div id="example">
+	<iframe id="example-frame" src="selectionsort.html"></iframe>
+</div>
 </body>
 </html>
