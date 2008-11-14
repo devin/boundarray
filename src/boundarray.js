@@ -13,14 +13,15 @@ var BoundArray;
 
 (function () {
 	
-	var getId = function (id, index) {
+	var elementId = function (id, index) {
 		return 'boundarray-' + id + '-' + index;
 	};
-
-	var deleteCount = 0;
-	var getIdToDelete = function () {
-		deleteCount++;
-		return 'boundarray-' + deleteCount + '-todelete';
+	
+	var deleteIdCount = 0;
+	
+	var deleteId = function () {
+		deleteIdCount++;
+		return 'boundarray-' + deleteIdCount + '-todelete';
 	};
 
 	var defineSetter = function (that, index) {
@@ -29,7 +30,8 @@ var BoundArray;
 			
 			that.data[index] = val;
 
-			changeElement(this, createNewElement(that, index), index);
+			removeElement(that, index);
+			insertElement(that, createNewElement(that, index), index)
 
 			return val;
 		});
@@ -63,18 +65,18 @@ var BoundArray;
 		if (that.list) {
 			// Manage list's ids.
 			for (i=that.data.length-1; i>index-1; i--) {
-				next = document.getElementById(getId(that.id, i));
+				next = document.getElementById(elementId(that.id, i));
 				if (next) {
-					next.setAttribute('id', getId(that.id, i+1));
+					next.setAttribute('id', elementId(that.id, i+1));
 				}
 			}
-			child.setAttribute('id', getId(that.id, index));
+			child.setAttribute('id', elementId(that.id, index));
 
 			child.style.display = 'none';
-			that.list.insertBefore(child, document.getElementById(getId(that.id, index+1)));
+			that.list.insertBefore(child, document.getElementById(elementId(that.id, index+1)));
 
 			if (jQueryFound()) {
-				$('#' + getId(that.id, index)).slideDown('normal');
+				$('#' + elementId(that.id, index)).slideDown('normal');
 			} else {
 				child.style.display = 'block';
 			}
@@ -83,18 +85,18 @@ var BoundArray;
 
 	var removeElement = function (that, index) {
 		var i;
-		var child, next, remove, deleteId;
+		var child, next, remove, deleted_id;
 
 		if (that.list) {
-			child = document.getElementById(getId(that.id, index));
-			deleteId = getIdToDelete();
+			child = document.getElementById(elementId(that.id, index));
+			deleted_id = deleteId();
 
 			// Manage list's ids.
-			child.setAttribute('id', deleteId);
+			child.setAttribute('id', deleted_id);
 			for (i=index+1; i<that.data.length; i++) {
-				next = document.getElementById(getId(that.id, i));
+				next = document.getElementById(elementId(that.id, i));
 				if (next) {
-					next.setAttribute('id', getId(that.id, i-1));
+					next.setAttribute('id', elementId(that.id, i-1));
 				}
 			}
 
@@ -103,18 +105,13 @@ var BoundArray;
 			};
 
 			if (jQueryFound()) {
-				$('#' + deleteId).slideUp('normal', remove);
+				$('#' + deleted_id).slideUp('normal', remove);
 			} else {
 				remove();
 			}
 		}
 
 		return child;
-	};
-
-	var changeElement = function (that, new_child, index) {
-		removeElement(that, index);
-		insertElement(that, new_child, index);
 	};
 
 	BoundArray = function (data, id, cl) {
@@ -241,9 +238,6 @@ var BoundArray;
 	};
 	BoundArray.prototype.shift = function () {
 		if (this.list) {
-			// TODO broken. i really need to do removal by id.
-			// keep track of ids then i can do any removal i want.
-			// id=boundarray-index into array? keep up to date?
 			removeElement(this, 0);
 		}
 		return this.data.shift();
