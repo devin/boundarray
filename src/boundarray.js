@@ -74,7 +74,6 @@ var BoundArray;
 		}
 	};
 
-	// TODO change new_val to new_child
 	var changeElement = function (that, new_val, index) {
 		var change;
 
