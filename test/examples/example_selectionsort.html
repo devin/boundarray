@@ -24,6 +24,7 @@
 <div id="explanation">
 	<h2>boundarray</h2>
 	<h3>Example: Selection Sort</h3>
+	<h4>Markup</h4>
 	<p>To do selection sort using a BoundArray, add a script tag to include boundarray.js and an empty list with an id. This uses an unordered list with the id "names":</p>
 	<div class="code">
 		<pre name="code" class="html:nogutter:nocontrols">
@@ -44,6 +45,8 @@
 &lt;/body&gt;
 		</pre>
 	</div>
+	<p>This html file is included in the iframe to the right.</p>
+	<h4>JavaScript</h4>
 	<p>Now in our JavaScript file, we can bind to that list with <code>var names = new BoundArray(array, 'names');</code>. From then on, we can use <code>names</code> like we would any other JavaScript array and it's changes will be mirrored in the list with id "names".</p>
 	<p>Note how the <code>selectionsort</code> function manipulates the <code>names</code> array, but does none of the code to keep the HTML list in sync. All of this glue code is handled by <code>BoundArray</code>.</p>
 	<div class="code">
