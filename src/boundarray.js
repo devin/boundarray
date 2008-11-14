@@ -59,11 +59,12 @@ var BoundArray;
 	};
 
 	var removeElement = function (that, index) {
-		var remove;
+		var child, remove;
 
 		if (that.list) {
+			child = that.list.childNodes[index];
 			remove = function () {
-				that.list.removeChild(that.list.childNodes[index]);
+				that.list.removeChild(child);
 			};
 
 			if (jQueryFound()) {
@@ -72,6 +73,8 @@ var BoundArray;
 				remove();
 			}
 		}
+
+		return child;
 	};
 
 	var changeElement = function (that, new_val, index) {
@@ -204,12 +207,11 @@ var BoundArray;
 		return result;
 	};
 	BoundArray.prototype.reverse = function () {
-		var i, child;
+		var i;
 
 		if (this.list) {
 			for (i=1; i<this.list.childNodes.length; i++) {
-				child = this.list.childNodes[i];
-				this.list.insertBefore(child, this.list.childNodes[0]);
+				insertElement(this, this.list.childNodes[i], 0);
 			}
 		}
 
