@@ -1,0 +1,23 @@
+#explanation {
+	width: 80%;
+
+	float: left;
+}
+
+div.code {
+	width: 80%;
+
+	margin: 10%;
+}
+
+#example {
+	width: 20%;
+	height: 650px;
+
+	float: left;
+}
+
+#example-frame {
+	width: 100%;
+	height: 100%;
+}
