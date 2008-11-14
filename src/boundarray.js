@@ -219,7 +219,9 @@ var BoundArray;
 	};
 	BoundArray.prototype.shift = function () {
 		if (this.list) {
-			this.list.removeChild(this.list.childNodes[0]);
+			// TODO broken. i really need to do removal by id.
+			// keep track of ids then i can do any removal i want.
+			removeElement(this, 0);
 		}
 		return this.data.shift();
 	};
