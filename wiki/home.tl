@@ -20,25 +20,19 @@ boundarray provides a constructor that binds a JavaScript array with a HTML list
 
 With a HTML page containing the following:
 
-<pre><code>
-	<ol id="numbers"></ol>
-</pre></code>
+<pre><code><ol id="numbers"></ol></pre></code>
 
 The following Javascript will bind to that list:
 
-<pre><code>
-	var n = ['one', 'two', 'three'];
-	var bound = new BoundArray(n, 'numbers');
-</pre></code>
+<pre><code>var n = ['one', 'two', 'three'];
+	var bound = new BoundArray(n, 'numbers');</pre></code>
 
 From here on out, bound can be used as a normal JavaScript array and the changes made to it will be reflected in the HTML list.
 
-<pre><code>
-	bound.pop();
+<pre><code>bound.pop();
 	bound.push('four');
 	bound.shift('one');
-	bound.push('five', 'six', 'seven');
-</pre></code>
+	bound.push('five', 'six', 'seven');</pre></code>
 
 h3. More information
 
