@@ -117,7 +117,7 @@ var BoundArray;
 	};
 
 	BoundArray = function (data, id, cl) {
-		var i, child;
+		var i;
 
 		this.data = data;
 		this.list = document.getElementById(id);
@@ -158,9 +158,7 @@ var BoundArray;
 				defineSetter(this, i);
 				defineGetter(this, i);
 
-				if (this.list) {
-					insertElement(this, createNewElement(this, i), i);
-				}
+				insertElement(this, createNewElement(this, i), i);
 			}
 
 			this.data.length = val;
@@ -207,16 +205,14 @@ var BoundArray;
 	// Overwite methods that we want to specifically handle on the HTML list.
 	// Mutator methods
 	BoundArray.prototype.pop = function () {
-		var index = this.data.length - 1;
-
-		removeElement(this, index);
+		removeElement(this, this.data.length-1);
 
 		return this.data.pop();
 	};
 	BoundArray.prototype.push = function () {
+		var i;
 		var old_length = this.data.length;
 		var result = this.data.push.apply(this.data, arguments);
-		var i;
 
 		for (i=old_length; i<this.data.length; i++) {
 			defineGetter(this, i);
@@ -243,8 +239,8 @@ var BoundArray;
 		return this.data.shift();
 	};
 	BoundArray.prototype.sort = function () {
+		var i;
 		var result = this.data.sort.apply(this.data, arguments);
-		var i, child;
 
 		// TODO better order for animation? replace?
 		if (this.list) {
@@ -259,9 +255,9 @@ var BoundArray;
 		return result;
 	};
 	BoundArray.prototype.splice = function () {
+		var i, child;
 		var old_length = this.data.length;
 		var result = this.data.splice.apply(this.data, arguments);
-		var i, child;
 
 		if (this.list) {
 			for (i=0; i<arguments[1]; i++) {
@@ -283,9 +279,9 @@ var BoundArray;
 		return result;
 	};
 	BoundArray.prototype.unshift = function () {
+		var i, child;
 		var old_length = this.data.length;
 		var result = this.data.unshift.apply(this.data, arguments);
-		var i, child;
 
 		if (this.list) {
 			for (i=0; i<arguments.length; i++) {
