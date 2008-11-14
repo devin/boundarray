@@ -18,14 +18,14 @@ var BoundArray;
 	var elementId = function (id, index) {
 		return 'boundarray-' + id + '-' + index;
 	};
-	var deleteId = (function () {
+	var deleteId = function () {
 		var deleteIdCount = 0;
 		
 		return function () {
 			deleteIdCount++;
 			return 'boundarray-' + deleteIdCount + '-todelete';
 		};
-	})();
+	}();
 
 	// Getter and setters for indexed data.
 	var defineSetter = function (that, index) {
@@ -33,7 +33,7 @@ var BoundArray;
 			that.data[index] = val;
 
 			removeElement(that, index);
-			insertElement(that, createNewElement(that, index), index)
+			insertElement(that, createNewElement(that, index), index);
 
 			return val;
 		});
