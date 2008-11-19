@@ -42,9 +42,6 @@ var BoundArray;
 	// List element management.
 	var createNewElement = function (that, index) {
 		var child = document.createElement('li');
-		if (that.cl) {
-			child.setAttribute('class', that.cl ? that.cl : '');
-		}
 		child.innerHTML = that.data[index] ? that.data[index] : '';
 
 		return child;
@@ -108,13 +105,12 @@ var BoundArray;
 		return child;
 	};
 
-	BoundArray = function (data, id, cl) {
+	BoundArray = function (data, id) {
 		var i;
 
 		this.data = data;
 		this.list = document.getElementById(id);
 		this.id = id;
-		this.cl = cl;
 
 		// Set interceptors for all existing entries in the data array.
 		// - intercept setter and update both the array and the HTML list element.
@@ -186,7 +182,7 @@ var BoundArray;
 	// Make all of these methods not enumerable.
 	BoundArray.prototype.propertyIsEnumerable = function (prop) {
 		if (prop==='index' || prop==='input' || prop==='length' ||
-				prop==='data' || prop==='list' || prop==='id' || prop==='cl' ||
+				prop==='data' || prop==='list' || prop==='id' ||
 				prop==='propertyIsEnumerable') {
 			return false;
 		} else {

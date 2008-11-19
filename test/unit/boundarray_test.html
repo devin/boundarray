@@ -165,10 +165,6 @@
 			this.assertEqual('2', getElement(1).innerHTML);
 		},
 
-		testClass: function () {
-			this.assertEqual('c', getElement(1).getAttribute('class'));
-		},
-
 		testUndefined: function () {
 			ba.length = 5
 			this.assertEqual('', getElement(4).innerHTML);
