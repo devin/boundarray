@@ -282,9 +282,7 @@ var BoundArray;
 
 		if (this.list) {
 			for (i=0; i<arguments.length; i++) {
-				child = createNewElement(this, i);
-
-				this.list.insertBefore(child, this.list.childNodes[i]);
+				insertElement(this, createNewElement(this, i), i);
 			}
 		}
 
