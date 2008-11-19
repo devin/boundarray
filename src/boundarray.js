@@ -90,26 +90,28 @@ var BoundArray;
 
 		if (that.list) {
 			child = document.getElementById(elementId(that.id, index));
-			deleted_id = deleteId();
 
-			// Manage list's ids.
-			child.setAttribute('id', deleted_id);
-			for (i=index+1; i<Math.min(that.data.length, that.list.childNodes.length);
-					i++) {
-				next = document.getElementById(elementId(that.id, i));
-				if (next) {
-					next.setAttribute('id', elementId(that.id, i-1));
+			if (child) {
+				deleted_id = deleteId();
+
+				// Manage list's ids.
+				child.setAttribute('id', deleted_id);
+				for (i=index+1; i<that.list.childNodes.length; i++) {
+					next = document.getElementById(elementId(that.id, i));
+					if (next) {
+						next.setAttribute('id', elementId(that.id, i-1));
+					}
 				}
-			}
 
-			remove = function () {
-				that.list.removeChild(child);
-			};
+				remove = function () {
+					that.list.removeChild(child);
+				};
 
-			if (jQueryFound()) {
-				$('#' + deleted_id).slideUp('normal', remove);
-			} else {
-				remove();
+				if (jQueryFound()) {
+					$('#' + deleted_id).slideUp('normal', remove);
+				} else {
+					remove();
+				}
 			}
 		}
 
@@ -258,13 +260,11 @@ var BoundArray;
 
 		if (this.list) {
 			for (i=0; i<arguments[1]; i++) {
-				this.list.removeChild(this.list.childNodes[arguments[0]]);
+				removeElement(this, arguments[0]);
 			}
 
 			for (i=0; i<arguments.length-2; i++) {
-				child = createNewElement(this, arguments[0]+i);
-
-				this.list.insertBefore(child, this.list.childNodes[arguments[0]+i]);
+				insertElement(this, createNewElement(this, arguments[0]+i), arguments[0]+i);
 			}
 		}
 
