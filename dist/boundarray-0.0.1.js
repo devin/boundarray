@@ -1,3 +1,11 @@
+/*  Boundarray, version 0.0.1
+ *  (c) 2008 Devin Naquin
+ *
+ *  Boundarray is freely distributable under
+ *  the terms of an MIT-style license.
+ *  For details, see the web site: http://github.com/devin/boundarray
+ *
+ *--------------------------------------------------------------------------*/
 
 var BoundArray;
 
@@ -10,7 +18,7 @@ var BoundArray;
 	};
 	var deleteId = function () {
 		var deleteIdCount = 0;
-		
+
 		return function () {
 			deleteIdCount++;
 			return 'boundarray-' + deleteIdCount + '-todelete';
@@ -19,7 +27,7 @@ var BoundArray;
 
 	// Getter and setters for indexed data.
 	var defineSetter = function (that, index) {
-		that.__defineSetter__(index, function (val) {			
+		that.__defineSetter__(index, function (val) {
 			that.data[index] = val;
 
 			removeElement(that, index);
@@ -240,7 +248,7 @@ var BoundArray;
 				insertElement(this, createNewElement(this, i), i);
 			}
 		}
-		
+
 		return result;
 	};
 	BoundArray.prototype.splice = function () {
