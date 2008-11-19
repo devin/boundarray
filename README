@@ -13,7 +13,7 @@ Caveats:
 	Because of extra properties needed by the wrapper, a enumeration of the array using for...in will not loop over the elements of the array. Use a standard for loop instead (eg. for (i=0; i<numbers.length; i++) {...}). for...in on arrays is bad practice for this reason anyway.
 
 Example:
-    boundarray provides a constructor that binds a JavaScript array with a HTML list element with an option class added to every child LI element.
+    boundarray provides a constructor that binds a JavaScript array with a HTML list element.
 
 	With a HTML page containing the following:
 
