@@ -242,13 +242,10 @@ var BoundArray;
 		var i;
 		var result = this.data.sort.apply(this.data, arguments);
 
-		// TODO better order for animation? replace?
 		if (this.list) {
-			while (this.list.childNodes[0]) {
-				this.list.removeChild(this.list.childNodes[0]);
-			}
 			for (i=0; i<this.data.length; i++) {
-				this.list.appendChild(createNewElement(this, i));
+				removeElement(this, i);
+				insertElement(this, createNewElement(this, i), i);
 			}
 		}
 		
