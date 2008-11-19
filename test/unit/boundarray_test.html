@@ -37,6 +37,10 @@
 <script type="text/javascript">
 	var ba, element;
 
+	var getElement = function (index) {
+		return document.getElementById('boundarray-boundlist-' + index);
+	};
+
 	// Array specific tests.
   new Test.Unit.Runner({
     setup: function () {
@@ -150,31 +154,24 @@
     },
 
 		testList: function () {			
-			this.assertEqual('one', element.childNodes[0].innerHTML);
-			this.assertEqual('two', element.childNodes[1].innerHTML);
-			this.assertEqual('three', element.childNodes[2].innerHTML);
+			this.assertEqual('one', getElement(0).innerHTML);
+			this.assertEqual('two', getElement(1).innerHTML);
+			this.assertEqual('three', getElement(2).innerHTML);
 		},
 
 		testSetters: function () {
-			var second = element.childNodes[1];
-			
-			this.assertEqual('two', second.innerHTML);
+			this.assertEqual('two', getElement(1).innerHTML);
 			ba[1] = '2';
-			second = element.childNodes[1];
-			this.assertEqual('2', second.innerHTML);
+			this.assertEqual('2', getElement(1).innerHTML);
 		},
 
 		testClass: function () {
-			var second = element.childNodes[1];
-			this.assertEqual('c', second.getAttribute('class'));
+			this.assertEqual('c', getElement(1).getAttribute('class'));
 		},
 
 		testUndefined: function () {
-			var last;
-
-			ba.length = 5;
-			last = document.getElementById('boundlist').childNodes[4];
-			this.assertEqual('', last.innerHTML);
+			ba.length = 5
+			this.assertEqual('', getElement(4).innerHTML);
 		}
       
   }, {testLog: "list"});
@@ -223,15 +220,15 @@
 
 		testReverse: function () {
 			this.assertEqual(3, element.childNodes.length);
-			this.assertEqual('three', element.childNodes[2].innerHTML);
+			this.assertEqual('three', getElement(2).innerHTML);
 			this.assertEqual('three', ba[2]);
 			ba.reverse();
 			this.assertEqual(3, element.childNodes.length);
-			this.assertEqual('one', element.childNodes[2].innerHTML);
+			this.assertEqual('one', getElement(2).innerHTML);
 			this.assertEqual('one', ba[2]);
-			this.assertEqual('two', element.childNodes[1].innerHTML);
+			this.assertEqual('two', getElement(1).innerHTML);
 			this.assertEqual('two', ba[1]);
-			this.assertEqual('three', element.childNodes[0].innerHTML);
+			this.assertEqual('three', getElement(0).innerHTML);
 			this.assertEqual('three', ba[0]);
 		},
 
@@ -252,22 +249,22 @@
 
 		testSort: function() {
 			ba.sort();
-			this.assertEqual('one', element.childNodes[0].innerHTML);
+			this.assertEqual('one', getElement(0).innerHTML);
 			this.assertEqual('one', ba[0]);
-			this.assertEqual('three', element.childNodes[1].innerHTML);
+			this.assertEqual('three', getElement(1).innerHTML);
 			this.assertEqual('three', ba[1]);
-			this.assertEqual('two', element.childNodes[2].innerHTML);
+			this.assertEqual('two', getElement(2).innerHTML);
 			this.assertEqual('two', ba[2]);
 			ba.sort(function (a, b) {
 				var values = ['one', 'two', 'three'];
 				
 				return values.indexOf(a) - values.indexOf(b);
 			});
-			this.assertEqual('one', element.childNodes[0].innerHTML);
+			this.assertEqual('one', getElement(0).innerHTML);
 			this.assertEqual('one', ba[0]);
-			this.assertEqual('two', element.childNodes[1].innerHTML);
+			this.assertEqual('two', getElement(1).innerHTML);
 			this.assertEqual('two', ba[1]);
-			this.assertEqual('three', element.childNodes[2].innerHTML);
+			this.assertEqual('three', getElement(2).innerHTML);
 			this.assertEqual('three', ba[2]);
 		},
 
@@ -299,9 +296,9 @@
 			result = ba.splice(1, 0, 'two and a half');
 			this.assertEqual(4, element.childNodes.length);
 			this.assertEqual(4, ba.length);
-			this.assertEqual('two and a half', element.childNodes[1].innerHTML);
+			this.assertEqual('two and a half', getElement(1).innerHTML);
 			this.assertEqual('two and a half', ba[1]);
-			this.assertEqual('two', element.childNodes[2].innerHTML);
+			this.assertEqual('two', getElement(2).innerHTML);
 			this.assertEqual('two', ba[2]);
 			expected = [];
 			this.assertEqual(expected.length, result.length);
@@ -319,13 +316,13 @@
 			this.assertEqual(4, result);
 			this.assertEqual(4, element.childNodes.length);
 			this.assertEqual(4, ba.length);
-			this.assertEqual('zero', element.childNodes[0].innerHTML);
+			this.assertEqual('zero', getElement(0).innerHTML);
 			this.assertEqual('zero', ba[0]);
 			result = ba.unshift('negative three', 'negative two', 'negative one');
 			this.assertEqual(7, result);
 			this.assertEqual(7, element.childNodes.length);
 			this.assertEqual(7, ba.length);
-			this.assertEqual('negative three', element.childNodes[0].innerHTML);
+			this.assertEqual('negative three', getElement(0).innerHTML);
 			this.assertEqual('negative three', ba[0]);
 		}
       
@@ -351,8 +348,8 @@
 			result = ba.push('four', 'five');
 			this.assertEqual(5, element.childNodes.length);
 			this.assertEqual(5, ba.length);
-			this.assertEqual('four', element.childNodes[3].innerHTML);
-			this.assertEqual('five', element.childNodes[4].innerHTML);
+			this.assertEqual('four', getElement(3).innerHTML);
+			this.assertEqual('five', getElement(4).innerHTML);
 		}
       
   }, {testLog: "bugs"});
