@@ -16,7 +16,7 @@ Because of extra properties needed by the wrapper, a enumeration of the array us
 
 h3. Example
 
-boundarray provides a constructor that binds a JavaScript array with a HTML list element with an option class added to every child @LI@ element.
+boundarray provides a constructor that binds a JavaScript array with a HTML list element.
 
 With a HTML page containing the following:
 
